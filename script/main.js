@@ -1,19 +1,28 @@
 const btnBurger = document.querySelector('.btn-burger'),
 catalog = document.querySelector('.catalog'),
-overlay = document.querySelector('.overlay'),
 btnClose = document.querySelector('.btn-close'),
 subcatalog = document.querySelector('.subcatalog'),
-catalogList = document.querySelectorAll('.catalog-list'),
-btnReturn = document.querySelector('.btn-return');
+catalogList = document.querySelector('.catalog-list'),
+btnReturn = document.querySelector('.btn-return'),
+subcatalogHeader = document.querySelector('.subcatalog-header'),
+overlay = document.createElement('div');
+
+overlay.classList.add('overlay')
+document.body.insertAdjacentElement('beforeend', overlay)
 
 const openMenu = () => {
     catalog.classList.add('open')
     overlay.classList.add('active')
 }
 
-const openSubMenu = (event) => {
+const openSubMenu = event => {
     event.preventDefault()
-    // subcatalog.classList.add('subopen')
+    const target = event.target
+    const itemList = event.target.closest('.catalog-list__item')
+    if (itemList){
+        subcatalogHeader.innerHTML = itemList.innerHTML
+        subcatalog.classList.add('subopen')
+    }
 }
 
 const closeMenu = () => {
@@ -30,7 +39,5 @@ const closeSubMenu = () => {
 btnBurger.addEventListener('click', openMenu)
 overlay.addEventListener('click', closeMenu)
 btnClose.addEventListener('click', closeMenu)
-
-catalogList.addEventListener('clicl', openSubMenu)
-
+catalogList.addEventListener('click', openSubMenu)
 btnReturn.addEventListener('click', closeSubMenu)
