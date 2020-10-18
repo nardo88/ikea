@@ -906,7 +906,7 @@ select {
 	}
 
 	.header {
-		-ms-grid-columns: 1fr 1.25rem 2fr 1.25rem 1fr 1.25rem 1fr;
+		-ms-grid-columns: 1fr 1.25rem 4fr 1.25rem 1fr 1.25rem 1fr;
 		grid-template-columns: 1fr 2fr 1fr 1fr;
 		-ms-grid-rows: auto 1.25rem auto 1.25rem auto;
 		grid-template-areas: "burger logo wishlist cart" "main main . sidebar" "footer footer footer footer";
