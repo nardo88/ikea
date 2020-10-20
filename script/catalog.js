@@ -1,11 +1,15 @@
-export const catalog = () => {
+import {getData} from './getData.js'
+import generateSubCatalog from './generateSubCatalog.js'
+
+
+export const catalogMenu = () => {
+    const updateSubCatalo = generateSubCatalog()
+
     const btnBurger = document.querySelector('.btn-burger'),
         catalog = document.querySelector('.catalog'),
         btnClose = document.querySelector('.btn-close'),
         subcatalog = document.querySelector('.subcatalog'),
         catalogList = document.querySelector('.catalog-list'),
-        btnReturn = document.querySelector('.btn-return'),
-        subcatalogHeader = document.querySelector('.subcatalog-header'),
         overlay = document.createElement('div');
 
     overlay.classList.add('overlay')
@@ -21,8 +25,12 @@ export const catalog = () => {
         const target = event.target
         const itemList = event.target.closest('.catalog-list__item')
         if (itemList){
-            subcatalogHeader.innerHTML = itemList.innerHTML
-            subcatalog.classList.add('subopen')
+            getData.subCatalog(target.textContent, (data) => {
+                updateSubCatalo(target.textContent, data)
+                subcatalog.classList.add('subopen')
+            })
+
+            
         }
     }
 
@@ -31,7 +39,6 @@ export const catalog = () => {
         overlay.classList.remove('active')
         closeSubMenu()
     }
-
     const closeSubMenu = () => {
         subcatalog.classList.remove('subopen')
     }
@@ -41,5 +48,8 @@ export const catalog = () => {
     overlay.addEventListener('click', closeMenu)
     btnClose.addEventListener('click', closeMenu)
     catalogList.addEventListener('click', openSubMenu)
-    btnReturn.addEventListener('click', closeSubMenu)
+    subcatalog.addEventListener('click', (e) => {
+        const btnReturn = e.target.closest('.btn-return');
+        if (btnReturn) closeSubMenu();
+    })
 }
