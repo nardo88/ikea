@@ -46,7 +46,6 @@ const generateGoodsPage = () => {
             if(btnAddCard){
                 e.preventDefault()
                 userData.cartList = btnAddCard.dataset.idd
-                console.log(userData.cartList);
             }
         })
     }
