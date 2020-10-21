@@ -1,23 +1,31 @@
 import {getData} from './getData.js'
-
-const wishList = ['idd005', 'idd100', 'idd077', 'idd033']
+import userData from './userData.js'
 
 
 const generateGoodsPage = () => {
 
+    
+
     const mainHeader = document.querySelector('.main-header')
-    const goodsList = document.querySelector('.goods-list')
-
     const generateCards = data => {
+        const goodsList = document.querySelector('.goods-list')
         goodsList.textContent = ''
-
+        if (!data.length){
+            const goods = document.querySelector('.goods')
+            goods.textContent =  location.search === '?wishlist' ?
+            'Список желаний пуст' :
+            'К сожалению по вашему запросу ничего не найдено'
+            return;
+        }
         data.forEach(item => {
             goodsList.insertAdjacentHTML('afterbegin', `
             <li class="goods-list__item">
 					<a class="goods-item__link" href="card.html#${item.id}">
 						<article class="goods-item">
-							<div class="goods-item__img">
-								<img src="${item.img}" alt="ФАБЛЕР БЬЁРН">
+                            <div class="goods-item__img">
+                                <img src="${item.img[0]}"
+                                       ${item.img[1] ? `data-second-image=${item.img[1]}` : '' } alt="${item.name}">
+								
 							</div>
 							<p class="goods-item__new">Новинка</p>
 							<h3 class="goods-item__header">${item.name}</h3>
@@ -32,6 +40,15 @@ const generateGoodsPage = () => {
 				</li>
             `)
         })
+
+        goodsList.addEventListener('click', (e) => {
+            const btnAddCard = e.target.closest('.btn-add-card')
+            if(btnAddCard){
+                e.preventDefault()
+                userData.cartList = btnAddCard.dataset.idd
+                console.log(userData.cartList);
+            }
+        })
     }
 
 
@@ -45,7 +62,7 @@ const generateGoodsPage = () => {
              getData.search(value, generateCards);
              mainHeader.textContent = `Поиск: ${value}`
         } else if (prop === 'wishlist'){
-            getData.wishList(wishList, generateCards);
+            getData.wishList(userData.wishList, generateCards);
             mainHeader.textContent = `Список желаний`
 
         } else if ( prop === 'cat' || prop === 'subcat') {
@@ -55,6 +72,8 @@ const generateGoodsPage = () => {
         }
  
      } 
+
+     
 }
 
 

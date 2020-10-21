@@ -19,11 +19,7 @@ import {getData} from './getData.js'
 export const loadData = () => {
    
 
-   if (location.hash){
-       console.log(location.hash.slice(1));
-    getData.item(location.hash.slice(1), data => console.log(data));
-       
-    } 
+   
 
     if (location.pathname.includes('cart')){
         getData.cart(cartList, data => console.log(data));
