@@ -5,19 +5,31 @@ import userData from './userData.js'
 
 const generateCart = () => {
 
-    const cartList = userData.cartListData
-
+    const cartList = document.querySelector('.cart-list')
+    const cartTotalPrice = document.querySelector('.cart-total-price')
     const generateCartList = data => {
-        const cartList = document.querySelector('.cart-list')
         cartList.textContent = ''
+        let totalPrice = 0
         data.forEach(item => {
-            console.log(item);
-            const {category, description, img, name: itemName, price, id} = item
-            cartList.insertAdjacentHTML('afterbegin', `
+            const {category, description, img, name: itemName, price, id, count} = item;
+            let options = '';
+            let countUser = userData.cartList.find(item => item.id === id).count;
+
+            if (countUser > count){
+                countUser = count;
+            }
+            for (let i = 1; i <= count; i++){
+
+                options += `<option value=${i} ${countUser === i ? 'selected' : ''}>${i}</option>`
+            }
+
+            totalPrice += countUser * price
+
+            cartList.insertAdjacentHTML('beforeend', `
             <li class="cart-item">
                 <div class="product">
                     <div class="product__image-container">
-                        <img src="${img[0]}" alt="${itemName} - ${description}" aria-describedby="aria_product_description_40366083" itemprop="image">
+                        <img src="${img[0]}" alt="${itemName} - ${description}" >
                     </div>
                     <div class="product__description">
                         <h3 class="product__name">
@@ -27,25 +39,24 @@ const generateCart = () => {
                     <div class="product__prices">
                         <div class="product__price-type product__price-type-regular">
                             <div>
-                                <div class="product__total product__total-regular">${price}.-</div>
-                                <!--    <div class="product__price-regular">99.-</div>  -->
+                            <div class="product__total product__total-regular">${price*countUser}.-</div>
+                                ${ countUser > 1 ? `
+                                    <div class="product__price-regular">${price}.-</div> ` : ``
+                                }
+                                
                             </div>
                         </div>
                     </div>
                     <div class="product__controls">
 
                         <div class="product-controls__remove">
-                            <button type="button" class="btn btn-remove">
+                            <button type="button" class="btn btn-remove" data-idd=${id}>
                                 <img src="image/remove-thin-24.16c1cc7a.svg" alt="Удалить товар">
                             </button>
                         </div>
                         <div class="product-controls__quantity">
-                            <select title="Выберите количество" aria-label="Выберите количество">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
+                            <select title="Выберите количество" aria-label="Выберите количество" data-idd=${id}>
+                                ${options}
 
                             </select>
                         </div>
@@ -54,10 +65,34 @@ const generateCart = () => {
             </li>
             `)
         })
+
+        cartTotalPrice.textContent = totalPrice
+        
     }
 
     if (location.pathname.includes('cart')){
-        getData.cart(cartList, generateCartList);
+        getData.cart(userData.cartList, generateCartList);
+
+        cartList.addEventListener('change', event => {
+            userData.changeCountCartList = {
+                id: event.target.dataset.idd,
+                count: parseInt(event.target.value)
+
+            };
+
+            getData.cart(userData.cartList, generateCartList);
+        })
+
+        cartList.addEventListener('click', event => {
+            const target = event.target
+            const btnRemove = target.closest('.btn-remove')
+            if(btnRemove){
+                userData.deleteItemCart = btnRemove.dataset.idd
+                getData.cart(userData.cartList, generateCartList);
+            }
+
+        })
+        
     }
 }
 

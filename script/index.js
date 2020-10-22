@@ -5,7 +5,6 @@ import generateCatalog from './generateCatalog.js'
 import generateGoodsPage from './generateGoodsPage.js'
 import generateItemPage from './generateItemPage.js'
 import generateCart from './generateCart.js'
-import {loadData} from './loadData.js'
 
 generateHeader()
 generateFooter()
@@ -16,4 +15,3 @@ generateCart()
 
 
 
-loadData()
